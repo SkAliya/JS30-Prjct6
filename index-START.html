@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State" />
+      <ul class="suggestions">
+        <!-- <li>Filter for a city<span class="population">804862</span></li>
+        <li>or a state</li> -->
+      </ul>
+    </form>
+    <script>
+      const endpoint =
+        "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
+      const ulEle = document.querySelector(".suggestions");
+      const inp = document.querySelector(".search");
+
+      //data storing obj
+      let listObj = [];
+      fetch(endpoint)
+        .then((res) => res.json())
+        .then((data) => listObj.push(...data));
+
+      //adding listener for both changes keyup & change
+      inp.addEventListener("keyup", (e) => fetching(e));
+      inp.addEventListener("change", (e) => fetching(e));
+
+      //fetching func
+      function fetching(e) {
+        //data storing fun
+        const filterData = function (data) {
+          const regex = new RegExp(inp.value, "gi");
+          return data.filter((obj) => regex.test(obj["city"]));
+        };
+
+        //filtering data nd storing
+        const filterObjs = filterData(listObj);
+
+        //new li creating part
+        let html = filterObjs
+          .map((obj) => {
+            //creating new elements
+            const regex = new RegExp(inp.value, "gi");
+            const updateCity = obj.city.replace(
+              regex,
+              `<span class="hl">${inp.value}</span>`
+            );
+            return `<li>
+                <span>${updateCity}</span>
+                <span class="population">${obj.population}</span>
+              </li>`;
+          })
+          .join("");
+        // console.log(html);
+        ulEle.innerHTML = html;
+      }
+    </script>
+  </body>
+  <!-- //another way of resolving url -->
+
+  <!-- //url resolving func
+      function passUrl(url) {
+        return new Promise((resolve) => resolve(url));
+      } -->
+
+  <!-- //async part
+  async function fetchData(url) {
+    try {
+      const url1 = await passUrl(url);
+      const res = await fetch(url1);
+      const data = await res.json();
+      // console.log(data);
+      //input part
+      listObj = filterData(data);
+      console.log(listObj); -->
+  <!-- catch (e) {
+        console.log(e.message);
+        } -->
+  <!-- fetchData(
+          "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json"
+        ); -->
+  <!-- adds num with commas -->
+  <!-- function numberWithCommas(x) {
+          return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        } -->
+</html>
